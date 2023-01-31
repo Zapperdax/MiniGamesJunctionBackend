@@ -5,6 +5,7 @@ const auth = require("../middleware/auth");
 
 ///////////////////////////// Get Routes //////////////////////////
 
+//get user details
 router.get("/user/me", auth, async (req, res) => {
   try {
     const user = req.user;
@@ -14,20 +15,8 @@ router.get("/user/me", auth, async (req, res) => {
   }
 });
 
-router.get("/user/allUsers", async (req, res) => {
-  try {
-    const users = await User.find({});
-    if (users.length === 0) {
-      return res.status(400).send({ ERROR: "No Users In Database" });
-    }
-    res.status(200).send(users);
-  } catch (err) {
-    res.status(500).send(err.message);
-  }
-});
-
 ///////////////////////////// Post Routes //////////////////////////
-
+//signup
 router.post("/newUser", async (req, res) => {
   try {
     const user = new User(req.body);
@@ -39,6 +28,7 @@ router.post("/newUser", async (req, res) => {
   }
 });
 
+//login
 router.post("/user/login", async (req, res) => {
   try {
     const user = await User.findByCredentials(
@@ -52,16 +42,17 @@ router.post("/user/login", async (req, res) => {
   }
 });
 
-router.post("/user/logout", auth, async (req, res) => {
-  try {
-    req.user.tokens = req.user.tokens.filter((token) => {
-      return token.token !== req.token;
-    });
-    await req.user.save();
-    res.send();
-  } catch (err) {
-    res.status(500).send(err.message);
-  }
-});
+//logout
+// router.post("/user/logout", auth, async (req, res) => {
+//   try {
+//     req.user.tokens = req.user.tokens.filter((token) => {
+//       return token.token !== req.token;
+//     });
+//     await req.user.save();
+//     res.send();
+//   } catch (err) {
+//     res.status(500).send(err.message);
+//   }
+// });
 
 module.exports = router;
