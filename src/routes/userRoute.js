@@ -15,6 +15,18 @@ router.get("/user/me", auth, async (req, res) => {
   }
 });
 
+router.get("/user/allUsers", async (req, res) => {
+  try {
+    const users = await User.find({});
+    if (users.length <= 0) {
+      return res.status(404).send({ "ERROR: ": "No Users In Database" });
+    }
+    res.status(200).send(users);
+  } catch (err) {
+    res.status(500).send(err);
+  }
+});
+
 ///////////////////////////// Post Routes //////////////////////////
 //signup
 router.post("/newUser", async (req, res) => {
@@ -42,17 +54,17 @@ router.post("/user/login", async (req, res) => {
   }
 });
 
-//logout
-// router.post("/user/logout", auth, async (req, res) => {
-//   try {
-//     req.user.tokens = req.user.tokens.filter((token) => {
-//       return token.token !== req.token;
-//     });
-//     await req.user.save();
-//     res.send();
-//   } catch (err) {
-//     res.status(500).send(err.message);
-//   }
-// });
+// logout
+router.post("/user/logout", auth, async (req, res) => {
+  try {
+    req.user.tokens = req.user.tokens.filter((token) => {
+      return token.token !== req.token;
+    });
+    await req.user.save();
+    res.send();
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+});
 
 module.exports = router;

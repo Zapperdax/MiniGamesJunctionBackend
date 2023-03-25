@@ -3,6 +3,7 @@ const cors = require("cors");
 require("dotenv").config();
 require("./db/mongoose");
 const userRoute = require("./routes/userRoute");
+const rpsRoute = require("./routes/rpsRoute");
 
 const app = express();
 const http = require("http");
@@ -12,6 +13,7 @@ const port = process.env.PORT;
 app.use(cors());
 app.use(express.json());
 app.use(userRoute);
+app.use(rpsRoute);
 
 const server = http.createServer(app);
 
@@ -24,9 +26,13 @@ const io = new Server(server, {
 
 io.on("connection", (socket) => {
   console.log(`User Connected: ${socket.id}`);
-  socket.on("sendMessage", ({ sendMessage }) => {
-    socket.broadcast.emit("receiveMessage", { sendMessage });
-    // socket.room(123).emit()
+  socket.on("sendMessage", ({ room, sendMessage, username }) => {
+    socket.join(room);
+    io.to(room).emit("receiveMessage", { sendMessage, username });
+  });
+
+  socket.on("disconnect", () => {
+    console.log(`User Disconnected: ${socket.id}`);
   });
 });
 
