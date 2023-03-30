@@ -8,7 +8,7 @@ const loqModel = new mongoose.Schema({
     type: String,
   },
   highScore: {
-    type: String,
+    type: Number,
   },
 });
 

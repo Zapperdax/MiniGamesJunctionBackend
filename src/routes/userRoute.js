@@ -67,4 +67,14 @@ router.post("/user/logout", auth, async (req, res) => {
   }
 });
 
+router.post("/user/logout/all", auth, async (req, res) => {
+  try {
+    req.user.tokens = [];
+    await req.user.save();
+    res.send();
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+});
+
 module.exports = router;
