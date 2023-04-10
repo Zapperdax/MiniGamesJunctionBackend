@@ -8,7 +8,7 @@ const tenziesModel = new mongoose.Schema({
     type: String,
   },
   highScore: {
-    type: Number,
+    type: String,
   },
 });
 
